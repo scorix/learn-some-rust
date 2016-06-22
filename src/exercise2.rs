@@ -27,11 +27,12 @@ fn get_a_missing_key(con: &redis::Connection, key: &str) {
 
 fn get_a_hash_key(con: &redis::Connection, key: &str) {
     let value : HashMap<String, redis::Value> = redis::cmd("HGETALL").arg(key).query(con).unwrap();
-    println!("{:?}", value);
+    println!("hash: {:?}", value);
 }
 
-fn get_a_set(con: &redis::Connection) {
-    unimplemented!()
+fn get_a_set(con: &redis::Connection, key: &str) {
+    let value : redis::Value = redis::cmd("SRANDMEMBER").arg(key).query(con).unwrap();
+    println!("got a random value: {:?} from set: {:?}", value, key);
 }
 
 fn main() {
@@ -48,4 +49,7 @@ fn main() {
     let _ : () = redis::cmd("HMSET").arg("hash_key").arg("foo").arg("bar").arg("size").arg(1).query(&con).unwrap();
     get_a_hash_key(&con, "hash_key");
     get_a_hash_key(&con, "missing_hash");
+
+    let _ : () = redis::cmd("SADD").arg("set").arg("foo").arg("bar").query(&con).unwrap();
+    get_a_set(&con, "set")
 }
