@@ -4,6 +4,8 @@ use rand::Rng;
 use std::cmp::Ordering;
 use std::io::{self, Write};
 
+// This is an example of [guessing-game](https://doc.rust-lang.org/book/guessing-game.html)
+
 fn main() {
     println!("Let's guess the number!");
 
@@ -55,7 +57,5 @@ fn main() {
     } else {
         println!("You have 0 times.");
     }
-
-
 
 }

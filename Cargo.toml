@@ -1,5 +1,5 @@
 [package]
-name = "guessing_game"
+name = "learn-some-rust"
 version = "0.1.0"
 authors = ["scorix <scorix@gmail.com>"]
 
@@ -7,4 +7,10 @@ authors = ["scorix <scorix@gmail.com>"]
 name = "exercise1"
 
 [dependencies.rand]
+version = "*"
+
+[[bin]]
+name = "exercise2"
+
+[dependencies.redis]
 version = "*"
