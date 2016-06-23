@@ -14,3 +14,9 @@ name = "exercise2"
 
 [dependencies.redis]
 version = "*"
+
+[[bin]]
+name = "exercise3"
+
+[dependencies.mysql]
+version = "*"
