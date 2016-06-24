@@ -37,19 +37,27 @@ fn get_a_set(con: &redis::Connection, key: &str) {
 
 fn main() {
     let con : redis::Connection = establish_connection();
-    let _ : () = redis::cmd("FLUSHALL").query(&con).unwrap();
-    let _ : () = con.set("a", 43).unwrap();
-    let _ : () = con.set("b", "foo").unwrap();
+    // This will raise an error while compiling:
+    //   redis::cmd("FLUSHALL").query(&con).unwrap();
+    //
+    // error: unable to infer enough type information about `_`; type annotations or generic parameter binding required [E0282]
+    //
+    // It is the same as
+    //   redis::cmd("FLUSHALL").query::<_>(&con).unwrap();
+    redis::cmd("FLUSHALL").query::<()>(&con).unwrap();
+    let x : String = con.set::<&str, i32, _>("a", 43).unwrap();
+    println!("Redis says: {:?}", x);
+    con.set::<&str, &str, ()>("b", "foo").unwrap();
 
     get(&con, "a");
     get(&con, "b");
     get_a_random_key(&con);
     get_a_missing_key(&con, "missing_key");
 
-    let _ : () = redis::cmd("HMSET").arg("hash_key").arg("foo").arg("bar").arg("size").arg(1).query(&con).unwrap();
+    redis::cmd("HMSET").arg("hash_key").arg("foo").arg("bar").arg("size").arg(1).query::<()>(&con).unwrap();
     get_a_hash_key(&con, "hash_key");
     get_a_hash_key(&con, "missing_hash");
 
-    let _ : () = redis::cmd("SADD").arg("set").arg("foo").arg("bar").query(&con).unwrap();
+    redis::cmd("SADD").arg("set").arg("foo").arg("bar").query::<()>(&con).unwrap();
     get_a_set(&con, "set")
 }
